@@ -2,6 +2,7 @@ import "dotenv/config";
 import mongoose from "mongoose";
 import express from "express";
 import authRoutes from "./routes/auth.routes.js";
+import complaintRoutes from "./routes/complaints.js";
 import logger from "./utils/logger.js";
 import { requestLogger } from "./middleware/request-logger.middleware.js";
 
@@ -20,6 +21,7 @@ mongoose.connect(mongodbUri)
     });
 
 app.use('/api/auth', authRoutes);
+app.use('/complaints', complaintRoutes);
 
 const PORT = process.env.PORT || 3000;
 
