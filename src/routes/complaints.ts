@@ -1,7 +1,6 @@
 import { Response, Router } from "express";
-
+import { uploadMiddleware, uploadImageToCloudinary } from "../helper/cloudinary.js";
 import Complaint from "../models/complaints.js";
-import User from "../models/users.js";
 import logger from "../utils/logger.js";
 import { analyzePriorityWithAI } from "../helper/ai.js";
 import { verifyToken, authorizeRoles, AuthRequest } from "../middleware/auth.middleware.js";
@@ -9,10 +8,16 @@ import { verifyToken, authorizeRoles, AuthRequest } from "../middleware/auth.mid
 const router = Router();
 
 // Create a new complaint
-router.post('/', verifyToken, async (req: AuthRequest, res: Response) => {
+router.post('/', verifyToken, uploadMiddleware.single('image'), async (req: AuthRequest, res: Response) => {
     try {
         const { title, description } = req.body;
         const userId = req.userId as string;
+
+        let imageUrl: string | undefined;
+        if (req.file) {
+            imageUrl = await uploadImageToCloudinary(req.file.buffer, req.file.mimetype);
+            logger.info(`Image uploaded to Cloudinary successfully for user ${userId}`);
+        }
 
         const newComplaint = new Complaint({
             title,
@@ -20,6 +25,7 @@ router.post('/', verifyToken, async (req: AuthRequest, res: Response) => {
             status: 'open',
             createdBy: userId,
             priority: await analyzePriorityWithAI(title, description),
+            imageUrl,
             createdAt: new Date(),
         });
 
@@ -103,7 +109,7 @@ router.get("/:id", verifyToken, async (req: AuthRequest, res: Response) => {
         const role = req.role as string;
 
         const complaint = await Complaint.findById(complaintId)
-            .select('createdBy assignedTo title description createdAt status imageUrl')
+            .select('createdBy assignedTo title description createdAt priority status imageUrl')
             .populate('createdBy', 'username')
             .populate('assignedTo', 'username');
 
