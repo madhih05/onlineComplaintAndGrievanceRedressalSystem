@@ -1,25 +1,28 @@
+import "dotenv/config";
 import mongoose from "mongoose";
 import express from "express";
-import dotenv from "dotenv";
-import authRoutes from "./routes/auth.routes";
+import authRoutes from "./routes/auth.routes.js";
+import logger from "./utils/logger.js";
+import { requestLogger } from "./middleware/request-logger.middleware.js";
 
 const app = express();
 app.use(express.json());
-
-dotenv.config();
+app.use(requestLogger);
 
 const mongodbUri = process.env.MONGODB_URI as string;
 
 mongoose.connect(mongodbUri)
     .then(() => {
-        console.log("Connected to MongoDB");
+        logger.info("Connected to MongoDB");
     })
     .catch((error) => {
-        console.error("Error connecting to MongoDB:", error);
+        logger.error("Error connecting to MongoDB:", error);
     });
 
 app.use('/api/auth', authRoutes);
 
-app.listen(3000, () => {
-    console.log("Server is running on port 3000");
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    logger.info(`Server is running on port ${PORT}`);
 });

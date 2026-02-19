@@ -1,7 +1,14 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import logger from "../utils/logger.js";
 
-const jwtSecret = process.env.JWT_SECRET as string;
+const getJwtSecret = () => {
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+        throw new Error("JWT_SECRET is not configured");
+    }
+    return jwtSecret;
+};
 
 export interface AuthRequest extends Request {
     userId?: string;
@@ -16,13 +23,17 @@ export const verifyToken = (req: AuthRequest, res: Response, next: NextFunction)
     }
 
     try {
+        const jwtSecret = getJwtSecret();
         const decoded = jwt.verify(token, jwtSecret) as { userId: string; role: string };
         req.userId = decoded.userId;
         req.role = decoded.role;
         next();
     }
     catch (error) {
-        console.error("Token verification failed:", error);
+        logger.warn("Token verification failed:", error);
+        if (error instanceof Error && error.message === "JWT_SECRET is not configured") {
+            return res.status(500).json({ message: "Server configuration error" });
+        }
         res.status(401).json({ message: "Invalid token" });
     }
 }
