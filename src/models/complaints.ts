@@ -4,11 +4,11 @@ export interface IComplaint extends mongoose.Document {
     title: string;
     description: string;
     status: "open" | "assigned" | "inProgress" | "resolved" | "closed";
-    priority: "low" | "medium" | "high";
+    priority: "low" | "medium" | "high" | "critical";
     imageUrl?: string;
     createdBy: mongoose.Types.ObjectId;
     assignedTo?: mongoose.Types.ObjectId;
-    timeline: {
+    timeline?: {
         status: string;
         timestamp: Date;
         comment?: string;
@@ -16,7 +16,7 @@ export interface IComplaint extends mongoose.Document {
         createdBy: mongoose.Types.ObjectId;
     }[];
     createdAt: Date;
-    updatedAt: Date;
+    updatedAt?: Date;
     feedback?: {
         rating: number;
         comment: string;
@@ -30,7 +30,7 @@ const complaintSchema = new mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
     status: { type: String, enum: ["open", "assigned", "inProgress", "resolved", "closed"], default: "open" },
-    priority: { type: String, enum: ["low", "medium", "high"], default: "medium" },
+    priority: { type: String, enum: ['low', 'medium', 'high', 'critical'], default: 'medium' },
     imageUrl: { type: String },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
