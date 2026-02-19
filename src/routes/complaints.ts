@@ -1,18 +1,18 @@
-import { Request, Response, Router, json } from "express";
+import { Response, Router } from "express";
+
 import Complaint from "../models/complaints.js";
 import User from "../models/users.js";
 import logger from "../utils/logger.js";
 import { analyzePriorityWithAI } from "../helper/ai.js";
-import { verifyToken, authorizeRoles } from "../middleware/auth.middleware.js";
-
+import { verifyToken, authorizeRoles, AuthRequest } from "../middleware/auth.middleware.js";
 
 const router = Router();
 
 // Create a new complaint
-router.post('/', verifyToken, async (req: Request, res: Response) => {
+router.post('/', verifyToken, async (req: AuthRequest, res: Response) => {
     try {
         const { title, description } = req.body;
-        const userId = (req as any).userId;
+        const userId = req.userId as string;
 
         const newComplaint = new Complaint({
             title,
@@ -21,7 +21,6 @@ router.post('/', verifyToken, async (req: Request, res: Response) => {
             createdBy: userId,
             priority: await analyzePriorityWithAI(title, description),
             createdAt: new Date(),
-
         });
 
         const timelineEntry: any = {
@@ -29,13 +28,10 @@ router.post('/', verifyToken, async (req: Request, res: Response) => {
             timestamp: new Date(),
             createdBy: userId,
             comment: 'Complaint created'
-        }
+        };
         newComplaint.timeline = [timelineEntry];
 
         await newComplaint.save();
-
-        const staffFilter = { role: 'supportStaff' };
-        const supportStaff = await User.find(staffFilter);
 
         logger.info(`Complaint created successfully by user ${userId}: ${title}`);
         res.status(201).json({ message: 'Complaint created successfully', complaintId: newComplaint._id });
@@ -47,10 +43,10 @@ router.post('/', verifyToken, async (req: Request, res: Response) => {
 });
 
 
-router.get('/', verifyToken, async (req: Request, res: Response) => {
+router.get('/', verifyToken, async (req: AuthRequest, res: Response) => {
     try {
-        const userId = (req as any).userId;
-        const role = (req as any).role;
+        const userId = req.userId as string;
+        const role = req.role as string;
         const status = req.query.status as string | undefined;
         const priority = req.query.priority as string | undefined;
         const searchKey = req.query.q as string | undefined;
@@ -60,9 +56,11 @@ router.get('/', verifyToken, async (req: Request, res: Response) => {
         if (status) {
             filter.status = status;
         }
+
         if (priority) {
             filter.priority = priority;
         }
+
         if (searchKey) {
             filter.$or = [
                 { title: { $regex: searchKey, $options: 'i' } },
@@ -79,6 +77,7 @@ router.get('/', verifyToken, async (req: Request, res: Response) => {
         else if (role === 'supportStaff') {
             const assignedTo = userId;
             filter.assignedTo = assignedTo;
+
             complaints = await Complaint.find(filter)
                 .select('title description status priority createdAt')
                 .populate('createdBy', 'username');
@@ -88,6 +87,7 @@ router.get('/', verifyToken, async (req: Request, res: Response) => {
             complaints = await Complaint.find(filter)
                 .select('title description status createdAt');
         }
+
         res.status(200).json({ complaints, message: `enga service ah use pannadhuku nandri` });
     }
     catch (error) {
@@ -96,20 +96,29 @@ router.get('/', verifyToken, async (req: Request, res: Response) => {
     }
 });
 
-router.get("/:id", verifyToken, async (req: Request, res: Response) => {
+router.get("/:id", verifyToken, async (req: AuthRequest, res: Response) => {
     try {
         const complaintId = req.params.id;
-        const userId = (req as any).userId;
-        const role = (req as any).role;
-        const complaint = await Complaint.findById(complaintId).select('createdBy assignedTo title description createdAt status imageUrl').populate('createdBy', 'username').populate('assignedTo', 'username');
+        const userId = req.userId as string;
+        const role = req.role as string;
+
+        const complaint = await Complaint.findById(complaintId)
+            .select('createdBy assignedTo title description createdAt status imageUrl')
+            .populate('createdBy', 'username')
+            .populate('assignedTo', 'username');
 
         if (!complaint) {
             return res.status(404).json({ message: 'Complaint not found' });
         }
 
-        if (complaint.createdBy.toString() !== userId && complaint.assignedTo?.toString() !== userId && role !== 'admin') {
+        if (
+            complaint.createdBy.toString() !== userId
+            && complaint.assignedTo?.toString() !== userId
+            && role !== 'admin'
+        ) {
             return res.status(403).json({ message: "Forbidden: You don't have permission to access this resource" });
         }
+
         res.status(200).json({ complaint });
     }
     catch (error) {
@@ -118,11 +127,11 @@ router.get("/:id", verifyToken, async (req: Request, res: Response) => {
     }
 });
 
-router.put('/:id', verifyToken, async (req: Request, res: Response) => {
+router.put('/:id', verifyToken, async (req: AuthRequest, res: Response) => {
     try {
         const complaintId = req.params.id;
-        const userId = (req as any).userId;
-        const role = (req as any).role;
+        const userId = req.userId as string;
+        const role = req.role as string;
         const { title, description, status, priority, assignedTo, comment } = req.body;
 
         const complaint = await Complaint.findById(complaintId);
@@ -136,14 +145,17 @@ router.put('/:id', verifyToken, async (req: Request, res: Response) => {
 
         if (role === 'admin') {
             isAuthorized = true;
+
             if (assignedTo && complaint.assignedTo?.toString() !== assignedTo) {
                 complaint.assignedTo = assignedTo;
                 timelineComment = timelineComment || 'Complaint reassigned';
             }
+
             if (status && complaint.status !== status) {
                 complaint.status = status;
                 timelineComment = timelineComment || `Status changed to ${status}`;
             }
+
             if (priority && complaint.priority !== priority) {
                 complaint.priority = priority;
                 timelineComment = timelineComment || `Priority changed to ${priority}`;
@@ -154,10 +166,12 @@ router.put('/:id', verifyToken, async (req: Request, res: Response) => {
                 return res.status(403).json({ message: "Forbidden: You don't have permission to update this complaint" });
             }
             isAuthorized = true;
+
             if (status && complaint.status !== status) {
                 complaint.status = status;
                 timelineComment = timelineComment || `Status changed to ${status}`;
             }
+
             if (priority && complaint.priority !== priority) {
                 complaint.priority = priority;
                 timelineComment = timelineComment || `Priority changed to ${priority}`;
@@ -168,8 +182,10 @@ router.put('/:id', verifyToken, async (req: Request, res: Response) => {
                 return res.status(403).json({ message: "Forbidden: You don't have permission to update this complaint" });
             }
             isAuthorized = true;
+
             if (title) complaint.title = title;
             if (description) complaint.description = description;
+
             if (status && complaint.status !== status) {
                 complaint.status = status;
                 timelineComment = timelineComment || `Status changed to ${status}`;
@@ -189,6 +205,7 @@ router.put('/:id', verifyToken, async (req: Request, res: Response) => {
                 createdBy: userId,
                 comment: timelineComment
             };
+
             complaint.timeline?.push(timelineEntry);
         }
 
@@ -203,53 +220,59 @@ router.put('/:id', verifyToken, async (req: Request, res: Response) => {
     }
 });
 
-router.put('/:id/status', verifyToken, authorizeRoles('admin', 'supportStaff'), async (req: Request, res: Response) => {
+router.put(
+    '/:id/status',
+    verifyToken,
+    authorizeRoles('admin', 'supportStaff'),
+    async (req: AuthRequest, res: Response) => {
+        try {
+            const complaintId = req.params.id;
+            const userId = req.userId as string;
+            const role = req.role as string;
+            const { status, comment } = req.body;
+
+            const complaint = await Complaint.findById(complaintId);
+
+            if (!complaint) {
+                return res.status(404).json({ message: 'Complaint not found' });
+            }
+
+            if (role === 'supportStaff' && complaint.assignedTo?.toString() !== userId) {
+                return res.status(403).json({ message: "Forbidden: You don't have permission to update this complaint" });
+            }
+
+            if (complaint.status === status) {
+                return res.status(400).json({ message: `Complaint is already marked as ${status}` });
+            }
+
+            complaint.status = status;
+
+            const timelineEntry: any = {
+                status,
+                timestamp: new Date(),
+                createdBy: userId,
+                comment: comment || `Status changed to ${status}`
+            };
+
+            complaint.timeline?.push(timelineEntry);
+
+            await complaint.save();
+
+            logger.info(`Complaint status updated successfully by user ${userId}: ${complaintId}`);
+            res.status(200).json({ message: 'Complaint status updated successfully' });
+        }
+        catch (error) {
+            logger.error('Error updating complaint status:', error);
+            res.status(500).json({ message: 'Internal server error' });
+        }
+    }
+);
+
+router.post('/:id/feedback', verifyToken, async (req: AuthRequest, res: Response) => {
     try {
         const complaintId = req.params.id;
-        const userId = (req as any).userId;
-        const role = (req as any).role;
-        const { status, comment } = req.body;
-
-        const complaint = await Complaint.findById(complaintId);
-
-        if (!complaint) {
-            return res.status(404).json({ message: 'Complaint not found' });
-        }
-
-        if (role === 'supportStaff' && complaint.assignedTo?.toString() !== userId) {
-            return res.status(403).json({ message: "Forbidden: You don't have permission to update this complaint" });
-        }
-
-        if (complaint.status === status) {
-            return res.status(400).json({ message: `Complaint is already marked as ${status}` });
-        }
-
-        complaint.status = status;
-
-        const timelineEntry: any = {
-            status,
-            timestamp: new Date(),
-            createdBy: userId,
-            comment: comment || `Status changed to ${status}`
-        };
-        complaint.timeline?.push(timelineEntry);
-
-        await complaint.save();
-
-        logger.info(`Complaint status updated successfully by user ${userId}: ${complaintId}`);
-        res.status(200).json({ message: 'Complaint status updated successfully' });
-    }
-    catch (error) {
-        logger.error('Error updating complaint status:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-});
-
-router.post('/:id/feedback', verifyToken, async (req: Request, res: Response) => {
-    try {
-        const complaintId = req.params.id;
-        const userId = (req as any).userId;
-        const role = (req as any).role;
+        const userId = req.userId as string;
+        const role = req.role as string;
         const { rating, comment } = req.body;
 
         if (role !== 'user') {

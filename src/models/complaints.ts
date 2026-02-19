@@ -23,13 +23,16 @@ export interface IComplaint extends mongoose.Document {
         createdAt: Date;
         updatedAt: Date;
     }
-
 }
 
 const complaintSchema = new mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
-    status: { type: String, enum: ["open", "assigned", "inProgress", "resolved", "closed"], default: "open" },
+    status: {
+        type: String,
+        enum: ["open", "assigned", "inProgress", "resolved", "closed"],
+        default: "open"
+    },
     priority: { type: String, enum: ['low', 'medium', 'high', 'critical'], default: 'medium' },
     imageUrl: { type: String },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
@@ -40,7 +43,11 @@ const complaintSchema = new mongoose.Schema({
             timestamp: { type: Date, default: Date.now },
             comment: { type: String },
             createdAt: { type: Date, default: Date.now },
-            createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
+            createdBy: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User",
+                required: true
+            }
         }
     ],
     createdAt: { type: Date, default: Date.now },

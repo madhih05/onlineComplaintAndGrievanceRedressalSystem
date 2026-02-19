@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+
 import logger from "../utils/logger.js";
 
 const getJwtSecret = () => {
@@ -36,7 +37,7 @@ export const verifyToken = (req: AuthRequest, res: Response, next: NextFunction)
         }
         res.status(401).json({ message: "Invalid token" });
     }
-}
+};
 
 export const authorizeRoles = (...allowedRoles: string[]) => {
     return (req: AuthRequest, res: Response, next: NextFunction) => {
@@ -44,5 +45,5 @@ export const authorizeRoles = (...allowedRoles: string[]) => {
             return res.status(403).json({ message: "Forbidden: You don't have permission to access this resource" });
         }
         next();
-    }
-}
+    };
+};
