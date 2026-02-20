@@ -5,6 +5,21 @@ import { useRouter } from 'next/navigation';
 import { fetchAPI } from '@/utils/api';
 import type { Complaint } from '@/types';
 
+// Status hierarchy - forward progression only
+const statusHierarchy = ['open', 'assigned', 'inProgress', 'resolved', 'closed'];
+
+// Helper function to format status text for display
+const formatStatusText = (status: string): string => {
+    const statusMap: Record<string, string> = {
+        open: 'Open',
+        assigned: 'Assigned',
+        inProgress: 'In Progress',
+        resolved: 'Resolved',
+        closed: 'Closed',
+    };
+    return statusMap[status] || status;
+};
+
 export default function AdminPage() {
     const router = useRouter();
     const [complaints, setComplaints] = useState<Complaint[]>([]);
@@ -72,6 +87,15 @@ export default function AdminPage() {
         setSearchQuery('');
         setStatusFilter('');
         setPriorityFilter('');
+    };
+
+    // Calculate available statuses based on complaint's current status (forward-only progression)
+    const getAvailableStatusesForComplaint = (currentStatus: string): string[] => {
+        const currentIndex = statusHierarchy.indexOf(currentStatus);
+        if (currentIndex === -1) return [];
+
+        // All statuses from current position onwards
+        return statusHierarchy.slice(currentIndex);
     };
 
     const handleStatusChange = async (complaintId: string, newStatus: string) => {
@@ -358,11 +382,11 @@ export default function AdminPage() {
                                                         : 'cursor-pointer'
                                                         } ${getStatusColor(complaint.status)} font-medium px-3 py-1`}
                                                 >
-                                                    <option value="open">Open</option>
-                                                    <option value="assigned">Assigned</option>
-                                                    <option value="inProgress">In Progress</option>
-                                                    <option value="resolved">Resolved</option>
-                                                    <option value="closed">Closed</option>
+                                                    {getAvailableStatusesForComplaint(complaint.status).map((status) => (
+                                                        <option key={status} value={status}>
+                                                            {formatStatusText(status)}
+                                                        </option>
+                                                    ))}
                                                 </select>
                                             </td>
                                         </tr>

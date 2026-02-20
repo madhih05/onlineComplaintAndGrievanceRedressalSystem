@@ -5,6 +5,21 @@ import { useRouter, useParams } from 'next/navigation';
 import { fetchAPI } from '@/utils/api';
 import type { Complaint } from '@/types';
 
+// Status hierarchy - forward progression only
+const statusHierarchy = ['open', 'assigned', 'inProgress', 'resolved', 'closed'];
+
+// Helper function to format status text for display
+const formatStatusText = (status: string): string => {
+    const statusMap: Record<string, string> = {
+        open: 'Open',
+        assigned: 'Assigned',
+        inProgress: 'In Progress',
+        resolved: 'Resolved',
+        closed: 'Closed',
+    };
+    return statusMap[status] || status;
+};
+
 export default function ComplaintDetailPage() {
     const router = useRouter();
     const params = useParams();
@@ -117,6 +132,28 @@ export default function ComplaintDetailPage() {
         } else {
             router.push('/dashboard');
         }
+    };
+
+    // Calculate available statuses based on current status and role (forward-only progression)
+    const getAvailableStatuses = (): string[] => {
+        if (!complaint) return [];
+
+        const currentIndex = statusHierarchy.indexOf(complaint.status);
+        if (currentIndex === -1) return [];
+
+        // All statuses from current position onwards
+        const forwardStatuses = statusHierarchy.slice(currentIndex);
+
+        // Apply role-based filtering
+        if (userRole === 'user') {
+            // Users can only move to 'resolved' or 'closed' (if those are forward moves)
+            return forwardStatuses.filter(
+                (status) => status === 'resolved' || status === 'closed'
+            );
+        }
+
+        // Admins and support staff can see all forward-moving statuses
+        return forwardStatuses;
     };
 
     const handleFeedbackSubmit = async (e: React.FormEvent) => {
@@ -440,7 +477,7 @@ export default function ComplaintDetailPage() {
                                         </>
                                     )}
 
-                                    {/* Status field - role-based options */}
+                                    {/* Status field - forward-only progression */}
                                     <div>
                                         <label className="block text-sm font-medium text-gray-300 mb-1">
                                             Status
@@ -450,21 +487,11 @@ export default function ComplaintDetailPage() {
                                             onChange={(e) => setEditStatus(e.target.value)}
                                             className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
                                         >
-                                            {userRole === 'user' ? (
-                                                <>
-                                                    <option value={editStatus}>{editStatus.charAt(0).toUpperCase() + editStatus.slice(1)}</option>
-                                                    <option value="resolved">Resolved</option>
-                                                    <option value="closed">Closed</option>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <option value="open">Open</option>
-                                                    <option value="assigned">Assigned</option>
-                                                    <option value="inProgress">In Progress</option>
-                                                    <option value="resolved">Resolved</option>
-                                                    <option value="closed">Closed</option>
-                                                </>
-                                            )}
+                                            {getAvailableStatuses().map((status) => (
+                                                <option key={status} value={status}>
+                                                    {formatStatusText(status)}
+                                                </option>
+                                            ))}
                                         </select>
                                     </div>
 
