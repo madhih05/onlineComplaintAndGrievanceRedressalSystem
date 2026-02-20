@@ -1,203 +1,89 @@
 # Complaint System Frontend
 
-A modern Next.js 14+ frontend application for the Online Complaint and Grievance Redressal System.
+Next.js 14+ UI for the Online Complaint and Grievance Redressal System. Provides authentication, complaint submission, dashboards, and detail views.
 
-## 🚀 Technology Stack
+## Technology Stack
 
-- **Framework:** Next.js 14+ (App Router)
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS
-- **State Management:** React hooks (useState, useEffect)
-- **API Communication:** Custom fetch wrapper with JWT authentication
+- Next.js 14 App Router + TypeScript
+- Tailwind CSS
+- Custom API wrapper with JWT attachment
 
-## 📋 Features
+## Features
 
-- **Authentication System**
-  - User login and registration
-  - Role-based access control (User, Admin, Support Staff)
-  - JWT token-based authentication
-  - Auto-login with token verification
+- Authentication (login, register, auto-login)
+- Role-based dashboards (User, Admin, Support Staff)
+- Complaint creation with image upload
+- Complaint detail view with timeline
+- Status and priority updates
 
-- **User Dashboard**
-  - Submit new complaints with image upload
-  - View personal complaints
-  - Track complaint status
-  - Click-to-view complaint details
-
-- **Admin/Staff Dashboard**
-  - View all complaints (Admin) or assigned complaints (Staff)
-  - Update complaint status via dropdown
-  - View user information
-  - Track priorities set by AI
-
-- **Complaint Detail Page**
-  - View full complaint details
-  - Timeline of complaint history
-  - Edit complaint based on role permissions
-  - Image display for attached files
-  - Add comments to timeline
-
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 frontend/
 ├── src/
 │   ├── app/
-│   │   ├── layout.tsx              # Root layout
-│   │   ├── page.tsx                # Home page with auth redirect
-│   │   ├── globals.css             # Global styles with Tailwind
-│   │   ├── login/
-│   │   │   └── page.tsx            # Login/Registration page
-│   │   ├── dashboard/
-│   │   │   └── page.tsx            # User dashboard
-│   │   ├── admin/
-│   │   │   └── page.tsx            # Admin/Staff dashboard
-│   │   └── complaints/
-│   │       └── [id]/
-│   │           └── page.tsx        # Complaint detail page
-│   ├── types/
-│   │   └── index.ts                # TypeScript interfaces
-│   └── utils/
-│       └── api.ts                  # API fetch wrapper
-├── package.json                    # Dependencies
-├── tsconfig.json                   # TypeScript config
-├── next.config.mjs                 # Next.js config
-├── tailwind.config.js              # Tailwind CSS config
-├── postcss.config.js               # PostCSS config
-└── .gitignore                      # Git ignore rules
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   ├── login/page.tsx
+│   │   ├── dashboard/page.tsx
+│   │   ├── admin/page.tsx
+│   │   └── complaints/[id]/page.tsx
+│   ├── types/index.ts
+│   └── utils/api.ts
+├── package.json
+├── next.config.mjs
+├── tailwind.config.js
+└── tsconfig.json
 ```
 
-## 🔐 User Roles
+## Prerequisites
 
-### User
-- Submit complaints with title, description, and optional image
-- View and edit own complaints
-- Update complaint title, description, and status
-- Add comments to timeline
+- Node.js 18+
+- Backend API running (defaults to http://localhost:3000)
 
-### Support Staff
-- View assigned complaints
-- Update complaint status and priority
-- Add comments to timeline
+## Install and Run
 
-### Admin
-- View all complaints
-- Update any complaint
-- Assign complaints to support staff
-- Change status, priority, and assignee
-- Full system access
-
-## 🛠️ Setup Instructions
-
-### Prerequisites
-- Node.js 18+ installed
-- Backend API running on `http://localhost:3000`
-
-### Installation
-
-1. Navigate to the frontend directory:
-```bash
+```
 cd frontend
-```
-
-2. Install dependencies:
-```bash
 npm install
+PORT=3001 npm run dev
 ```
 
-3. Run the development server:
-```bash
-npm run dev
-```
+Open http://localhost:3001
 
-4. Open your browser and navigate to:
-```
-http://localhost:3000
-```
+## Build and Start
 
-### Build for Production
-
-```bash
+```
 npm run build
 npm start
 ```
 
-## 🔌 API Integration
+## API Integration
 
-The frontend communicates with the backend API at `http://localhost:3000`. The API wrapper automatically handles:
+The base URL is hardcoded in src/utils/api.ts:
 
-- JWT token attachment to requests
-- Content-Type headers (JSON vs FormData)
-- Error handling and message extraction
-- Response parsing
+```
+const API_BASE_URL = 'http://localhost:3000';
+```
 
-### API Endpoints Used
+Update that value if your backend runs on a different host or port.
 
-- `POST /api/auth/login` - User login
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/me` - Token verification
-- `GET /complaints` - Fetch complaints (filtered by role)
-- `POST /complaints` - Create new complaint
-- `GET /complaints/:id` - Get single complaint
-- `PUT /complaints/:id` - Update complaint
-- `PUT /complaints/:id/status` - Update complaint status
+## Routes Used
 
-## 🎨 UI/UX Features
+- POST /api/auth/register
+- POST /api/auth/login
+- POST /api/auth/me
+- GET /complaints
+- POST /complaints
+- GET /complaints/:id
+- PUT /complaints/:id
+- PUT /complaints/:id/status
 
-- **Responsive Design:** Works on desktop, tablet, and mobile
-- **Loading States:** Spinners and disabled buttons during API calls
-- **Error Handling:** User-friendly error messages
-- **Success Feedback:** Toast-like success messages with actions
-- **Color-Coded Badges:** 
-  - Status badges (open, assigned, in progress, resolved, closed)
-  - Priority badges (low, medium, high, critical)
-- **Interactive Timeline:** Visual representation of complaint history
-- **Form Validation:** Client-side validation with required fields
-- **Role-Based UI:** Different interfaces and permissions per role
+## Status and Priority
 
-## 📱 Pages Overview
+Status values: open, assigned, inProgress, resolved, closed
 
-### 1. Home Page (`/`)
-- Checks for stored JWT token
-- Verifies token with backend
-- Redirects to appropriate dashboard based on role
-
-### 2. Login Page (`/login`)
-- Toggle between login and registration
-- Role selection for registration
-- Admin secret validation
-- Automatic redirect after successful auth
-
-### 3. User Dashboard (`/dashboard`)
-- Two-column layout
-- Left: Submit new complaint form
-- Right: Personal complaints list
-- Success alerts with "Open Complaint" action
-
-### 4. Admin Dashboard (`/admin`)
-- Data table view of all/assigned complaints
-- Inline status dropdown for quick updates
-- Clickable titles to view details
-- Priority and status badges
-
-### 5. Complaint Detail Page (`/complaints/[id]`)
-- View mode with full complaint details
-- Edit mode with role-based form fields
-- Timeline sidebar with history
-- Image display for attachments
-- Back navigation to dashboard
-
-## 🚦 Status & Priority Values
-
-### Status
-- `open` - Newly created complaint
-- `assigned` - Assigned to support staff
-- `inProgress` - Being worked on
-- `resolved` - Issue resolved
-- `closed` - Ticket closed
-
-### Priority (AI-Generated)
-- `low` - Low urgency
+Priority values: low, medium, high, critical
 - `medium` - Medium urgency
 - `high` - High urgency
 - `critical` - Critical urgency

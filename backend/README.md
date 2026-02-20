@@ -1,203 +1,107 @@
-# Online Complaint and Grievance Redressal System
+# Complaint System Backend
 
-An intelligent complaint management platform built during a hackathon that allows users to submit complaints, track their status, and helps administrators manage and resolve grievances efficiently.
+Express + TypeScript API for the Online Complaint and Grievance Redressal System. Handles authentication, complaint workflows, AI priority analysis, and image uploads.
 
-## 🚀 Technology Stack
+## Technology Stack
 
-- **Runtime**: Node.js
-- **Framework**: Express.js 5.x
-- **Language**: TypeScript
-- **Database**: MongoDB with Mongoose ODM
-- **Authentication**: JWT (JSON Web Tokens)
-- **Password Hashing**: bcrypt
-- **AI Integration**: Google Generative AI (Gemini API)
-- **Image hosting**: Cloudinary
-- **File Upload**: Multer
-- **Logging**: Winston
+- Node.js, Express 5, TypeScript
+- MongoDB + Mongoose
+- JWT auth + bcrypt
+- Google Generative AI (Gemini) for priority analysis
+- Cloudinary + Multer for image uploads
+- Winston logging
 
-## 📋 Project Structure
+## Project Structure
 
 ```
 src/
-├── index.ts                          # Application entry point
+├── index.ts                          # App entry
 ├── controller/
-│   └── auth.controller.ts            # Authentication logic (register, login, auto-login)
+│   └── auth.controller.ts            # Register, login, auto-login
 ├── routes/
-│   ├── auth.routes.ts                # Authentication endpoints
-│   └── complaints.ts                 # Complaint management endpoints
+│   ├── auth.routes.ts                # /api/auth/*
+│   └── complaints.ts                 # /complaints/*
 ├── models/
-│   ├── users.ts                      # User data model and schema
-│   └── complaints.ts                 # Complaint data model and schema
+│   ├── users.ts                      # User schema
+│   └── complaints.ts                 # Complaint schema
 ├── middleware/
-│   ├── auth.middleware.ts            # JWT verification and role authorization
-│   └── request-logger.middleware.ts  # HTTP request logging
+│   ├── auth.middleware.ts            # JWT + role checks
+│   └── request-logger.middleware.ts  # Request logging
 ├── helper/
-│   ├── ai.ts                         # AI-powered priority analysis
-│   ├── cloudinary.ts                 # Image upload to Cloudinary
+│   ├── ai.ts                         # Gemini priority analysis
+│   └── cloudinary.ts                 # Cloudinary upload helper
 └── utils/
-    └── logger.ts                     # Winston logging configuration
+    └── logger.ts                     # Winston logger
 ```
 
-## 🔐 User Roles and Permissions
+## Prerequisites
 
-The system has three user roles with different permissions:
+- Node.js 18+
+- MongoDB instance
+- Cloudinary account
+- Gemini API key
 
-### 1. **User**
-- Create complaints
-- View own complaints
-- Update own complaints (title, description, status)
-- Provide feedback for resolved/closed complaints
-- Cannot modify priority or assign to staff
+## Configuration
 
-### 2. **Support Staff**
-- View assigned complaints only
-- Update status and priority of assigned complaints
-- Add comments to timeline
-- Cannot reassign complaints
+Create backend/.env:
 
-### 3. **Admin**
-- View all complaints
-- Assign complaints to support staff
-- Update all complaint fields (status, priority, title, description)
-- Reassign complaints
-- Full system access
+```
+MONGODB_URI=mongodb://localhost:27017/complaints
+JWT_SECRET=your_jwt_secret
+ADMIN_SECRET=your_admin_signup_secret
+GEMINI_API_KEY=your_gemini_api_key
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_key
+CLOUDINARY_API_SECRET=your_cloudinary_secret
+PORT=3000
+NODE_ENV=development
+```
 
-## 📡 API Endpoints Documentation
+## Install and Run
 
-### Authentication Endpoints
+```
+cd backend
+npm install
+npm run dev
+```
 
-#### 1. **User Registration**
-- **Method**: `POST`
-- **Path**: `/api/auth/register`
-- **Authentication**: None (Public)
-- **Request Body**:
-  ```json
-  {
-    "username": "string",          // Unique username
-    "email": "string",             // Unique email address
-    "password": "string",          // Password (will be hashed)
-    "role": "user|admin|supportStaff",  // Optional, defaults to "user"
-    "adminSecret": "string"        // Required if role is "admin"
-  }
-  ```
-- **Processing**:
-  - Validates that email is not already registered
-  - If registering as admin, verifies admin secret matches `ADMIN_SECRET` env variable
-  - Hashes password using bcrypt (10 rounds)
-  - Creates new user in database
-  - Generates JWT token with userId and role
-  - Logs registration event
-- **Success Response (201)**:
-  ```json
-  {
-    "message": "User registered successfully",
-    "token": "jwt_token_string",
-    "userId": "mongodb_user_id",
-    "role": "user|admin|supportStaff"
-  }
-  ```
-- **Error Responses**:
-  - `400`: Email already in use / Invalid admin secret
-  - `500`: Internal server error
+Build + start:
 
----
+```
+npm run build
+npm start
+```
 
-#### 2. **User Login**
-- **Method**: `POST`
-- **Path**: `/api/auth/login`
-- **Authentication**: None (Public)
-- **Request Body**:
-  ```json
-  {
-    "email": "string",      // Registered email
-    "password": "string"    // User password
-  }
-  ```
-- **Processing**:
-  - Finds user by email in database
-  - Compares provided password with stored hashed password using bcrypt
-  - If credentials invalid, returns error
-  - Generates JWT token with userId and role (expires in 2 hours)
-  - Logs login event
-- **Success Response (200)**:
-  ```json
-  {
-    "message": "Login successful",
-    "token": "jwt_token_string",
-    "userId": "mongodb_user_id",
-    "role": "user|admin|supportStaff"
-  }
-  ```
-- **Error Responses**:
-  - `400`: Invalid email or password
-  - `500`: Internal server error
+## Scripts
 
----
+- npm run dev: start API with tsx
+- npm run build: compile TypeScript
+- npm start: run compiled server
 
-#### 3. **Auto-Login (Token Verification)**
-- **Method**: `POST`
-- **Path**: `/api/auth/me`
-- **Authentication**: Bearer Token (Required)
-- **Request Headers**:
-  ```
-  Authorization: Bearer <jwt_token>
-  ```
-- **Processing**:
-  - Extracts token from Authorization header
-  - Verifies and decodes JWT token
-  - Retrieves user from database
-  - Logs auto-login event
-- **Success Response (200)**:
-  ```json
-  {
-    "message": "Auto-login successful",
-    "userId": "mongodb_user_id",
-    "role": "user|admin|supportStaff"
-  }
-  ```
-- **Error Responses**:
-  - `401`: No token provided / Invalid token
-  - `404`: User not found
-  - `500`: Server configuration error (JWT_SECRET not set)
+## API Routes
 
----
+Auth:
+- POST /api/auth/register
+- POST /api/auth/login
+- POST /api/auth/me
 
-### Complaint Management Endpoints
+Complaints:
+- POST /complaints
+- GET /complaints
+- GET /complaints/:id
+- PUT /complaints/:id
+- PUT /complaints/:id/status
 
-#### 4. **Create Complaint**
-- **Method**: `POST`
-- **Path**: `/complaints`
-- **Authentication**: Bearer Token (Required) - Any authenticated user
-- **Request Body** (multipart/form-data):
-  ```
-  title: string               // Complaint title (required)
-  description: string         // Detailed complaint description (required)
-  image: File                 // Optional image file attachment
-  ```
-- **Processing**:
-  - Extracts user ID from JWT token
-  - If image is provided:
-    - Converts file buffer to base64
-    - Uploads to Cloudinary in 'ibm_hackathon_complaints' folder
-    - Stores secure HTTPS URL
-  - Uses Google Gemini AI to automatically analyze complaint title and description
-  - AI returns priority level: "low", "medium", "high", or "critical"
-  - Creates new complaint with:
-    - Status set to "open"
-    - AI-analyzed priority
-    - Current timestamp
-    - Creator user ID
-    - Image URL (if provided)
-  - Initializes timeline with creation entry
-  - Saves complaint to database
-  - Logs complaint creation
-- **Success Response (201)**:
-  ```json
-  {
-    "message": "Complaint created successfully",
-    "complaintId": "complaint_mongodb_id"
-  }
-  ```
+## Roles
+
+- User: create and manage own complaints
+- Support Staff: view assigned complaints and update status/priority
+- Admin: full access, assignment, and reassignment
+
+## Notes
+
+- The server listens on PORT (defaults to 3000).
+- Complaint priority is inferred by Gemini; unexpected responses fall back to medium.
 - **Error Responses**:
   - `401`: Token not provided or invalid
   - `500`: Internal server error / Image upload failed
