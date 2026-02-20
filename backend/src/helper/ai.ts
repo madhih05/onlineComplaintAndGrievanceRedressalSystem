@@ -13,6 +13,8 @@ export const analyzePriorityWithAI = async (
         You must respond with EXACTLY ONE WORD from this list: low, medium, high, critical.
         Do not include any other text, punctuation, formatting, or explanation.
 
+        make the priority "critical" if the complaint describes a situation that poses an immediate risk to health, safety, or security, or if it indicates a severe service failure that significantly impacts the customer. Examples include reports of physical harm, data breaches, major outages, or any issue that could lead to significant financial loss or reputational damage.
+
         Title: ${title}
         Description: ${description}`;
 
