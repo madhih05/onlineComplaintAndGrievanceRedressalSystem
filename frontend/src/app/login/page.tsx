@@ -99,20 +99,20 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 px-4 py-12">
+        <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4 py-12">
             <div className="w-full max-w-md">
                 {/* Header */}
                 <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold text-gray-900 mb-2">
+                    <h1 className="text-4xl font-bold text-white mb-2">
                         Complaint System
                     </h1>
-                    <p className="text-gray-600">
+                    <p className="text-gray-400">
                         {isLogin ? 'Sign in to your account' : 'Create a new account'}
                     </p>
                 </div>
 
                 {/* Card */}
-                <div className="bg-white rounded-2xl shadow-xl p-8">
+                <div className="bg-gray-900 rounded-2xl shadow-xl p-8 border border-gray-800">
                     {/* Toggle Buttons */}
                     <div className="flex gap-2 mb-6">
                         <button
@@ -122,7 +122,7 @@ export default function LoginPage() {
                             }}
                             className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${isLogin
                                     ? 'bg-indigo-600 text-white shadow-md'
-                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-700'
                                 }`}
                         >
                             Login
@@ -134,7 +134,7 @@ export default function LoginPage() {
                             }}
                             className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${!isLogin
                                     ? 'bg-indigo-600 text-white shadow-md'
-                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-700'
                                 }`}
                         >
                             Register
@@ -143,8 +143,8 @@ export default function LoginPage() {
 
                     {/* Error Message */}
                     {error && (
-                        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                            <p className="text-sm text-red-600">{error}</p>
+                        <div className="mb-4 p-3 bg-red-500/20 border border-red-500/30 rounded-lg">
+                            <p className="text-sm text-red-400">{error}</p>
                         </div>
                     )}
 
@@ -152,7 +152,7 @@ export default function LoginPage() {
                     {isLogin ? (
                         <form onSubmit={handleLogin} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-300 mb-1">
                                     Email
                                 </label>
                                 <input
@@ -162,13 +162,13 @@ export default function LoginPage() {
                                     onChange={(e) =>
                                         setLoginData({ ...loginData, email: e.target.value })
                                     }
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
                                     placeholder="your@email.com"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-300 mb-1">
                                     Password
                                 </label>
                                 <input
@@ -178,7 +178,7 @@ export default function LoginPage() {
                                     onChange={(e) =>
                                         setLoginData({ ...loginData, password: e.target.value })
                                     }
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
                                     placeholder="••••••••"
                                 />
                             </div>
@@ -195,7 +195,7 @@ export default function LoginPage() {
                         /* Register Form */
                         <form onSubmit={handleRegister} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-300 mb-1">
                                     Username
                                 </label>
                                 <input
@@ -205,13 +205,13 @@ export default function LoginPage() {
                                     onChange={(e) =>
                                         setRegisterData({ ...registerData, username: e.target.value })
                                     }
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
                                     placeholder="johndoe"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-300 mb-1">
                                     Email
                                 </label>
                                 <input
@@ -221,13 +221,13 @@ export default function LoginPage() {
                                     onChange={(e) =>
                                         setRegisterData({ ...registerData, email: e.target.value })
                                     }
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
                                     placeholder="your@email.com"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-300 mb-1">
                                     Password
                                 </label>
                                 <input
@@ -237,13 +237,13 @@ export default function LoginPage() {
                                     onChange={(e) =>
                                         setRegisterData({ ...registerData, password: e.target.value })
                                     }
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
                                     placeholder="••••••••"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-300 mb-1">
                                     Role
                                 </label>
                                 <select
@@ -254,7 +254,7 @@ export default function LoginPage() {
                                             role: e.target.value as 'user' | 'admin' | 'supportStaff',
                                         })
                                     }
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
                                 >
                                     <option value="user">User</option>
                                     <option value="supportStaff">Support Staff</option>
@@ -264,7 +264,7 @@ export default function LoginPage() {
 
                             {registerData.role === 'admin' && (
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-gray-300 mb-1">
                                         Admin Secret
                                     </label>
                                     <input
@@ -277,7 +277,7 @@ export default function LoginPage() {
                                                 adminSecret: e.target.value,
                                             })
                                         }
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                                        className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
                                         placeholder="Admin secret key"
                                     />
                                 </div>
@@ -295,7 +295,7 @@ export default function LoginPage() {
                 </div>
 
                 {/* Footer */}
-                <p className="text-center mt-6 text-sm text-gray-600">
+                <p className="text-center mt-6 text-sm text-gray-500">
                     Built for IBM Hackathon
                 </p>
             </div>

@@ -107,32 +107,32 @@ export default function DashboardPage() {
     const getStatusColor = (status: string) => {
         switch (status) {
             case 'open':
-                return 'bg-blue-100 text-blue-800';
+                return 'bg-blue-500/20 text-blue-400 border border-blue-500/30';
             case 'assigned':
-                return 'bg-purple-100 text-purple-800';
+                return 'bg-purple-500/20 text-purple-400 border border-purple-500/30';
             case 'inProgress':
-                return 'bg-yellow-100 text-yellow-800';
+                return 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30';
             case 'resolved':
-                return 'bg-green-100 text-green-800';
+                return 'bg-green-500/20 text-green-400 border border-green-500/30';
             case 'closed':
-                return 'bg-gray-100 text-gray-800';
+                return 'bg-gray-500/20 text-gray-400 border border-gray-500/30';
             default:
-                return 'bg-gray-100 text-gray-800';
+                return 'bg-gray-500/20 text-gray-400 border border-gray-500/30';
         }
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="min-h-screen bg-gray-950">
             {/* Navigation Bar */}
-            <nav className="bg-white shadow-md">
+            <nav className="bg-gray-900 border-b border-gray-800 shadow-lg">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-16">
-                        <h1 className="text-2xl font-bold text-indigo-600">
+                        <h1 className="text-2xl font-bold text-indigo-500">
                             User Dashboard
                         </h1>
                         <button
                             onClick={handleLogout}
-                            className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium"
+                            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors font-medium"
                         >
                             Logout
                         </button>
@@ -144,11 +144,11 @@ export default function DashboardPage() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Success Alert */}
                 {successMessage && (
-                    <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4 flex items-start justify-between">
+                    <div className="mb-6 bg-green-500/20 border border-green-500/30 rounded-lg p-4 flex items-start justify-between">
                         <div className="flex-1">
                             <div className="flex items-center">
                                 <svg
-                                    className="w-5 h-5 text-green-600 mr-2"
+                                    className="w-5 h-5 text-green-400 mr-2"
                                     fill="currentColor"
                                     viewBox="0 0 20 20"
                                 >
@@ -158,12 +158,12 @@ export default function DashboardPage() {
                                         clipRule="evenodd"
                                     />
                                 </svg>
-                                <p className="text-green-800 font-medium">{successMessage}</p>
+                                <p className="text-green-400 font-medium">{successMessage}</p>
                             </div>
                             {newComplaintId && (
                                 <button
                                     onClick={() => router.push(`/complaints/${newComplaintId}`)}
-                                    className="mt-2 ml-7 text-sm text-green-700 underline hover:text-green-900"
+                                    className="mt-2 ml-7 text-sm text-green-400 underline hover:text-green-300"
                                 >
                                     Open Complaint →
                                 </button>
@@ -174,7 +174,7 @@ export default function DashboardPage() {
                                 setSuccessMessage('');
                                 setNewComplaintId(null);
                             }}
-                            className="text-green-600 hover:text-green-800"
+                            className="text-green-400 hover:text-green-300"
                         >
                             <svg
                                 className="w-5 h-5"
@@ -194,20 +194,20 @@ export default function DashboardPage() {
                 {/* Two Column Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     {/* Left Column - Submit Form */}
-                    <div className="bg-white rounded-xl shadow-lg p-6">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                    <div className="bg-gray-900 rounded-xl border border-gray-800 shadow-lg p-6">
+                        <h2 className="text-2xl font-bold text-white mb-6">
                             Submit New Complaint
                         </h2>
 
                         {error && (
-                            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                                <p className="text-sm text-red-600">{error}</p>
+                            <div className="mb-4 p-3 bg-red-500/20 border border-red-500/30 rounded-lg">
+                                <p className="text-sm text-red-400">{error}</p>
                             </div>
                         )}
 
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-300 mb-1">
                                     Title
                                 </label>
                                 <input
@@ -215,13 +215,13 @@ export default function DashboardPage() {
                                     required
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
                                     placeholder="Brief summary of your complaint"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-300 mb-1">
                                     Description
                                 </label>
                                 <textarea
@@ -229,13 +229,13 @@ export default function DashboardPage() {
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                     rows={6}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition resize-none"
+                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition resize-none"
                                     placeholder="Provide detailed information about your complaint..."
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-300 mb-1">
                                     Image (Optional)
                                 </label>
                                 <input
@@ -245,14 +245,14 @@ export default function DashboardPage() {
                                     onChange={(e) =>
                                         setImage(e.target.files ? e.target.files[0] : null)
                                     }
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-indigo-600 file:text-indigo-50 hover:file:bg-indigo-700"
                                 />
                             </div>
 
                             <button
                                 type="submit"
                                 disabled={submitting}
-                                className="w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/30"
+                                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/30"
                             >
                                 {submitting ? 'Submitting...' : 'Submit Complaint'}
                             </button>
@@ -260,19 +260,19 @@ export default function DashboardPage() {
                     </div>
 
                     {/* Right Column - My Complaints */}
-                    <div className="bg-white rounded-xl shadow-lg p-6">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                    <div className="bg-gray-900 rounded-xl border border-gray-800 shadow-lg p-6">
+                        <h2 className="text-2xl font-bold text-white mb-6">
                             My Complaints
                         </h2>
 
                         {loading ? (
                             <div className="flex justify-center items-center py-12">
-                                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600"></div>
+                                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-500"></div>
                             </div>
                         ) : complaints.length === 0 ? (
                             <div className="text-center py-12">
                                 <svg
-                                    className="mx-auto h-12 w-12 text-gray-400"
+                                    className="mx-auto h-12 w-12 text-gray-700"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -284,8 +284,8 @@ export default function DashboardPage() {
                                         d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                                     />
                                 </svg>
-                                <p className="mt-2 text-gray-500">No complaints yet</p>
-                                <p className="text-sm text-gray-400">
+                                <p className="mt-2 text-gray-400">No complaints yet</p>
+                                <p className="text-sm text-gray-500">
                                     Submit your first complaint using the form
                                 </p>
                             </div>
@@ -294,11 +294,11 @@ export default function DashboardPage() {
                                 {complaints.map((complaint) => (
                                     <div
                                         key={complaint._id}
-                                        className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
+                                        className="border border-gray-800 bg-gray-800/30 rounded-lg p-4 hover:bg-gray-800/50 transition-colors cursor-pointer"
                                         onClick={() => router.push(`/complaints/${complaint._id}`)}
                                     >
                                         <div className="flex justify-between items-start mb-2">
-                                            <h3 className="font-semibold text-gray-900 hover:text-indigo-600 transition-colors">
+                                            <h3 className="font-semibold text-white hover:text-indigo-400 transition-colors">
                                                 {complaint.title}
                                             </h3>
                                             <span
@@ -309,7 +309,7 @@ export default function DashboardPage() {
                                                 {complaint.status}
                                             </span>
                                         </div>
-                                        <p className="text-sm text-gray-600 mb-2 line-clamp-2">
+                                        <p className="text-sm text-gray-400 mb-2 line-clamp-2">
                                             {complaint.description}
                                         </p>
                                         <p className="text-xs text-gray-500">

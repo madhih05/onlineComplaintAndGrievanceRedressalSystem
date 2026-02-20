@@ -127,41 +127,41 @@ export default function ComplaintDetailPage() {
     const getStatusColor = (status: string) => {
         switch (status) {
             case 'open':
-                return 'bg-blue-100 text-blue-800';
+                return 'bg-blue-500/20 text-blue-400 border border-blue-500/30';
             case 'assigned':
-                return 'bg-purple-100 text-purple-800';
+                return 'bg-purple-500/20 text-purple-400 border border-purple-500/30';
             case 'inProgress':
-                return 'bg-yellow-100 text-yellow-800';
+                return 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30';
             case 'resolved':
-                return 'bg-green-100 text-green-800';
+                return 'bg-green-500/20 text-green-400 border border-green-500/30';
             case 'closed':
-                return 'bg-gray-100 text-gray-800';
+                return 'bg-gray-500/20 text-gray-400 border border-gray-500/30';
             default:
-                return 'bg-gray-100 text-gray-800';
+                return 'bg-gray-500/20 text-gray-400 border border-gray-500/30';
         }
     };
 
     const getPriorityColor = (priority: string) => {
         switch (priority) {
             case 'low':
-                return 'bg-green-100 text-green-800';
+                return 'bg-green-500/20 text-green-400 border border-green-500/30';
             case 'medium':
-                return 'bg-yellow-100 text-yellow-800';
+                return 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30';
             case 'high':
-                return 'bg-orange-100 text-orange-800';
+                return 'bg-orange-500/20 text-orange-400 border border-orange-500/30';
             case 'critical':
-                return 'bg-red-100 text-red-800';
+                return 'bg-red-500/20 text-red-400 border border-red-500/30';
             default:
-                return 'bg-gray-100 text-gray-800';
+                return 'bg-gray-500/20 text-gray-400 border border-gray-500/30';
         }
     };
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+            <div className="min-h-screen flex items-center justify-center bg-gray-950">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-                    <p className="mt-4 text-gray-600">Loading complaint...</p>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto"></div>
+                    <p className="mt-4 text-gray-400">Loading complaint...</p>
                 </div>
             </div>
         );
@@ -169,12 +169,12 @@ export default function ComplaintDetailPage() {
 
     if (error && !complaint) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+            <div className="min-h-screen flex items-center justify-center bg-gray-950">
                 <div className="text-center">
-                    <p className="text-red-600 mb-4">{error}</p>
+                    <p className="text-red-400 mb-4">{error}</p>
                     <button
                         onClick={handleBack}
-                        className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                        className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors"
                     >
                         Go Back
                     </button>
@@ -186,14 +186,14 @@ export default function ComplaintDetailPage() {
     if (!complaint) return null;
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="min-h-screen bg-gray-950">
             {/* Navigation Bar */}
-            <nav className="bg-white shadow-md">
+            <nav className="bg-gray-900 border-b border-gray-800 shadow-lg">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-16">
                         <button
                             onClick={handleBack}
-                            className="flex items-center text-indigo-600 hover:text-indigo-800 font-medium"
+                            className="flex items-center text-indigo-400 hover:text-indigo-300 font-medium transition-colors"
                         >
                             <svg
                                 className="w-5 h-5 mr-2"
@@ -210,7 +210,7 @@ export default function ComplaintDetailPage() {
                             </svg>
                             Back to Dashboard
                         </button>
-                        <h1 className="text-xl font-bold text-gray-900">
+                        <h1 className="text-xl font-bold text-white">
                             Complaint Details
                         </h1>
                     </div>
@@ -221,10 +221,10 @@ export default function ComplaintDetailPage() {
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Success Message */}
                 {successMessage && (
-                    <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4 flex items-center justify-between">
+                    <div className="mb-6 bg-green-500/20 border border-green-500/30 rounded-lg p-4 flex items-center justify-between">
                         <div className="flex items-center">
                             <svg
-                                className="w-5 h-5 text-green-600 mr-2"
+                                className="w-5 h-5 text-green-400 mr-2"
                                 fill="currentColor"
                                 viewBox="0 0 20 20"
                             >
@@ -234,11 +234,11 @@ export default function ComplaintDetailPage() {
                                     clipRule="evenodd"
                                 />
                             </svg>
-                            <p className="text-green-800 font-medium">{successMessage}</p>
+                            <p className="text-green-400 font-medium">{successMessage}</p>
                         </div>
                         <button
                             onClick={() => setSuccessMessage('')}
-                            className="text-green-600 hover:text-green-800"
+                            className="text-green-400 hover:text-green-300"
                         >
                             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                 <path
@@ -253,8 +253,8 @@ export default function ComplaintDetailPage() {
 
                 {/* Error Message */}
                 {error && (
-                    <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                        <p className="text-sm text-red-600">{error}</p>
+                    <div className="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-lg">
+                        <p className="text-sm text-red-400">{error}</p>
                     </div>
                 )}
 
@@ -262,15 +262,15 @@ export default function ComplaintDetailPage() {
                     {/* Main Content - 2/3 width */}
                     <div className="lg:col-span-2 space-y-6">
                         {/* Complaint Card */}
-                        <div className="bg-white rounded-xl shadow-lg p-6">
+                        <div className="bg-gray-900 rounded-xl border border-gray-800 shadow-lg p-6">
                             <div className="flex justify-between items-start mb-4">
-                                <h2 className="text-2xl font-bold text-gray-900">
+                                <h2 className="text-2xl font-bold text-white">
                                     {isEditMode ? 'Edit Complaint' : 'Complaint Details'}
                                 </h2>
                                 {!isEditMode && (
                                     <button
                                         onClick={() => setIsEditMode(true)}
-                                        className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium"
+                                        className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors font-medium"
                                     >
                                         Edit Ticket
                                     </button>
@@ -281,26 +281,26 @@ export default function ComplaintDetailPage() {
                                 /* View Mode */
                                 <div className="space-y-4">
                                     <div>
-                                        <h3 className="text-sm font-medium text-gray-500 mb-1">
+                                        <h3 className="text-sm font-medium text-gray-400 mb-1">
                                             Title
                                         </h3>
-                                        <p className="text-lg font-semibold text-gray-900">
+                                        <p className="text-lg font-semibold text-white">
                                             {complaint.title}
                                         </p>
                                     </div>
 
                                     <div>
-                                        <h3 className="text-sm font-medium text-gray-500 mb-1">
+                                        <h3 className="text-sm font-medium text-gray-400 mb-1">
                                             Description
                                         </h3>
-                                        <p className="text-gray-700 whitespace-pre-wrap">
+                                        <p className="text-gray-300 whitespace-pre-wrap">
                                             {complaint.description}
                                         </p>
                                     </div>
 
                                     <div className="flex gap-4">
                                         <div>
-                                            <h3 className="text-sm font-medium text-gray-500 mb-1">
+                                            <h3 className="text-sm font-medium text-gray-400 mb-1">
                                                 Status
                                             </h3>
                                             <span
@@ -313,7 +313,7 @@ export default function ComplaintDetailPage() {
                                         </div>
 
                                         <div>
-                                            <h3 className="text-sm font-medium text-gray-500 mb-1">
+                                            <h3 className="text-sm font-medium text-gray-400 mb-1">
                                                 Priority
                                             </h3>
                                             <span
@@ -328,7 +328,7 @@ export default function ComplaintDetailPage() {
 
                                     {complaint.imageUrl && (
                                         <div>
-                                            <h3 className="text-sm font-medium text-gray-500 mb-2">
+                                            <h3 className="text-sm font-medium text-gray-400 mb-2">
                                                 Attached Image
                                             </h3>
                                             <img
@@ -339,31 +339,31 @@ export default function ComplaintDetailPage() {
                                         </div>
                                     )}
 
-                                    <div className="grid grid-cols-2 gap-4 pt-4 border-t">
+                                    <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-800">
                                         <div>
-                                            <h3 className="text-sm font-medium text-gray-500 mb-1">
+                                            <h3 className="text-sm font-medium text-gray-400 mb-1">
                                                 Created By
                                             </h3>
-                                            <p className="text-gray-900">
+                                            <p className="text-white">
                                                 {complaint.createdBy?.username || 'Unknown'}
                                             </p>
                                         </div>
 
                                         <div>
-                                            <h3 className="text-sm font-medium text-gray-500 mb-1">
+                                            <h3 className="text-sm font-medium text-gray-400 mb-1">
                                                 Created At
                                             </h3>
-                                            <p className="text-gray-900">
+                                            <p className="text-white">
                                                 {formatDate(complaint.createdAt)}
                                             </p>
                                         </div>
 
                                         {complaint.assignedTo && (
                                             <div>
-                                                <h3 className="text-sm font-medium text-gray-500 mb-1">
+                                                <h3 className="text-sm font-medium text-gray-400 mb-1">
                                                     Assigned To
                                                 </h3>
-                                                <p className="text-gray-900">
+                                                <p className="text-white">
                                                     {complaint.assignedTo.username}
                                                 </p>
                                             </div>
@@ -377,7 +377,7 @@ export default function ComplaintDetailPage() {
                                     {userRole === 'user' && (
                                         <>
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                                <label className="block text-sm font-medium text-gray-300 mb-1">
                                                     Title
                                                 </label>
                                                 <input
@@ -385,12 +385,12 @@ export default function ComplaintDetailPage() {
                                                     required
                                                     value={editTitle}
                                                     onChange={(e) => setEditTitle(e.target.value)}
-                                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
                                                 />
                                             </div>
 
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                                <label className="block text-sm font-medium text-gray-300 mb-1">
                                                     Description
                                                 </label>
                                                 <textarea
@@ -398,7 +398,7 @@ export default function ComplaintDetailPage() {
                                                     value={editDescription}
                                                     onChange={(e) => setEditDescription(e.target.value)}
                                                     rows={6}
-                                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none resize-none"
+                                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none resize-none"
                                                 />
                                             </div>
                                         </>
@@ -406,13 +406,13 @@ export default function ComplaintDetailPage() {
 
                                     {/* Status field - role-based options */}
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        <label className="block text-sm font-medium text-gray-300 mb-1">
                                             Status
                                         </label>
                                         <select
                                             value={editStatus}
                                             onChange={(e) => setEditStatus(e.target.value)}
-                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                                            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
                                         >
                                             {userRole === 'user' ? (
                                                 <>
@@ -435,13 +435,13 @@ export default function ComplaintDetailPage() {
                                     {/* Admin and Staff can edit priority */}
                                     {(userRole === 'admin' || userRole === 'supportStaff') && (
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                            <label className="block text-sm font-medium text-gray-300 mb-1">
                                                 Priority
                                             </label>
                                             <select
                                                 value={editPriority}
                                                 onChange={(e) => setEditPriority(e.target.value)}
-                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                                                className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
                                             >
                                                 <option value="low">Low</option>
                                                 <option value="medium">Medium</option>
@@ -454,14 +454,14 @@ export default function ComplaintDetailPage() {
                                     {/* Admin can reassign */}
                                     {userRole === 'admin' && (
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                            <label className="block text-sm font-medium text-gray-300 mb-1">
                                                 Assign To (Email)
                                             </label>
                                             <input
                                                 type="email"
                                                 value={editAssignedTo}
                                                 onChange={(e) => setEditAssignedTo(e.target.value)}
-                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
+                                                className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
                                                 placeholder="staff@example.com"
                                             />
                                         </div>
@@ -469,14 +469,14 @@ export default function ComplaintDetailPage() {
 
                                     {/* Comment field for all */}
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        <label className="block text-sm font-medium text-gray-300 mb-1">
                                             Comment (Optional)
                                         </label>
                                         <textarea
                                             value={editComment}
                                             onChange={(e) => setEditComment(e.target.value)}
                                             rows={3}
-                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none resize-none"
+                                            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none resize-none"
                                             placeholder="Add a note to the timeline..."
                                         />
                                     </div>
@@ -486,7 +486,7 @@ export default function ComplaintDetailPage() {
                                         <button
                                             type="submit"
                                             disabled={saving}
-                                            className="flex-1 bg-indigo-600 text-white py-2 rounded-lg font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
                                             {saving ? 'Saving...' : 'Save Changes'}
                                         </button>
@@ -497,7 +497,7 @@ export default function ComplaintDetailPage() {
                                                 setEditComment('');
                                                 setError('');
                                             }}
-                                            className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition-colors"
+                                            className="px-6 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-lg font-medium border border-gray-700 transition-colors"
                                         >
                                             Cancel
                                         </button>
@@ -509,8 +509,8 @@ export default function ComplaintDetailPage() {
 
                     {/* Timeline - 1/3 width */}
                     <div className="lg:col-span-1">
-                        <div className="bg-white rounded-xl shadow-lg p-6 sticky top-8">
-                            <h3 className="text-lg font-bold text-gray-900 mb-4">
+                        <div className="bg-gray-900 rounded-xl border border-gray-800 shadow-lg p-6 sticky top-8">
+                            <h3 className="text-lg font-bold text-white mb-4">
                                 Timeline
                             </h3>
 
@@ -520,19 +520,19 @@ export default function ComplaintDetailPage() {
                                         <div key={index} className="relative pl-6 pb-4">
                                             {/* Timeline line */}
                                             {index !== complaint.timeline!.length - 1 && (
-                                                <div className="absolute left-2 top-6 bottom-0 w-0.5 bg-gray-200" />
+                                                <div className="absolute left-2 top-6 bottom-0 w-0.5 bg-gray-800" />
                                             )}
 
                                             {/* Timeline dot */}
-                                            <div className="absolute left-0 top-1 w-4 h-4 bg-indigo-500 rounded-full border-2 border-white" />
+                                            <div className="absolute left-0 top-1 w-4 h-4 bg-indigo-500 rounded-full border-2 border-gray-900" />
 
                                             {/* Timeline content */}
                                             <div>
-                                                <p className="text-sm font-medium text-gray-900">
+                                                <p className="text-sm font-medium text-white">
                                                     {entry.status}
                                                 </p>
                                                 {entry.comment && (
-                                                    <p className="text-sm text-gray-600 mt-1">
+                                                    <p className="text-sm text-gray-400 mt-1">
                                                         {entry.comment}
                                                     </p>
                                                 )}

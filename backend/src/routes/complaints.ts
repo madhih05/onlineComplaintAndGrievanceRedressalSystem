@@ -41,7 +41,7 @@ router.post('/', verifyToken, uploadMiddleware.single('image'), async (req: Auth
         await newComplaint.save();
 
         logger.info(`Complaint created successfully by user ${userId}: ${title}`);
-        res.status(201).json({ message: 'Complaint created successfully', complaintId: newComplaint._id });
+        res.status(201).json({ message: 'Complaint created successfully', complaintId: newComplaint._id, newComplaint });
     }
     catch (error) {
         logger.error('Error creating complaint:', error);
