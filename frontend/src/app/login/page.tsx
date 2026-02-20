@@ -112,7 +112,7 @@ export default function LoginPage() {
                 </div>
 
                 {/* Card */}
-                <div className="bg-gray-900 rounded-2xl shadow-xl p-8 border border-gray-800">
+                <div className="bg-gray-900 rounded-3xl shadow-xl p-8 border border-gray-800">
                     {/* Toggle Buttons */}
                     <div className="flex gap-2 mb-6">
                         <button
@@ -120,7 +120,7 @@ export default function LoginPage() {
                                 setIsLogin(true);
                                 setError('');
                             }}
-                            className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${isLogin
+                            className={`flex-1 py-2 px-4 rounded-xl font-medium transition-all ${isLogin
                                 ? 'bg-indigo-600 text-white shadow-md'
                                 : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-700'
                                 }`}
@@ -132,7 +132,7 @@ export default function LoginPage() {
                                 setIsLogin(false);
                                 setError('');
                             }}
-                            className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${!isLogin
+                            className={`flex-1 py-2 px-4 rounded-xl font-medium transition-all ${!isLogin
                                 ? 'bg-indigo-600 text-white shadow-md'
                                 : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-700'
                                 }`}
@@ -143,7 +143,7 @@ export default function LoginPage() {
 
                     {/* Error Message */}
                     {error && (
-                        <div className="mb-4 p-3 bg-red-500/20 border border-red-500/30 rounded-lg">
+                        <div className="mb-4 p-3 bg-red-500/20 border border-red-500/30 rounded-2xl">
                             <p className="text-sm text-red-400">{error}</p>
                         </div>
                     )}
@@ -162,7 +162,7 @@ export default function LoginPage() {
                                     onChange={(e) =>
                                         setLoginData({ ...loginData, email: e.target.value })
                                     }
-                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
                                     placeholder="your@email.com"
                                 />
                             </div>
@@ -178,7 +178,7 @@ export default function LoginPage() {
                                     onChange={(e) =>
                                         setLoginData({ ...loginData, password: e.target.value })
                                     }
-                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
                                     placeholder="••••••••"
                                 />
                             </div>
@@ -186,7 +186,7 @@ export default function LoginPage() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full bg-indigo-600 text-white py-2.5 rounded-lg font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/30"
+                                className="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/30"
                             >
                                 {loading ? 'Signing in...' : 'Sign In'}
                             </button>
@@ -205,7 +205,7 @@ export default function LoginPage() {
                                     onChange={(e) =>
                                         setRegisterData({ ...registerData, username: e.target.value })
                                     }
-                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
                                     placeholder="johndoe"
                                 />
                             </div>
@@ -221,7 +221,7 @@ export default function LoginPage() {
                                     onChange={(e) =>
                                         setRegisterData({ ...registerData, email: e.target.value })
                                     }
-                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
                                     placeholder="your@email.com"
                                 />
                             </div>
@@ -237,7 +237,7 @@ export default function LoginPage() {
                                     onChange={(e) =>
                                         setRegisterData({ ...registerData, password: e.target.value })
                                     }
-                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
                                     placeholder="••••••••"
                                 />
                             </div>
@@ -254,7 +254,7 @@ export default function LoginPage() {
                                             role: e.target.value as 'user' | 'admin' | 'supportStaff',
                                         })
                                     }
-                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
                                 >
                                     <option value="user">User</option>
                                     <option value="supportStaff">Support Staff</option>
@@ -277,7 +277,7 @@ export default function LoginPage() {
                                                 adminSecret: e.target.value,
                                             })
                                         }
-                                        className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                                        className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
                                         placeholder="Admin secret key"
                                     />
                                 </div>
@@ -286,7 +286,7 @@ export default function LoginPage() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full bg-indigo-600 text-white py-2.5 rounded-lg font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/30"
+                                className="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/30"
                             >
                                 {loading ? 'Creating account...' : 'Create Account'}
                             </button>

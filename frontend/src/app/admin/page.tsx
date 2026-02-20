@@ -159,7 +159,7 @@ export default function AdminPage() {
                         </div>
                         <button
                             onClick={handleLogout}
-                            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors font-medium"
+                            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl transition-colors font-medium"
                         >
                             Logout
                         </button>
@@ -169,7 +169,7 @@ export default function AdminPage() {
 
             {/* Main Content */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <div className="bg-gray-900 rounded-xl border border-gray-800 shadow-lg overflow-hidden">
+                <div className="bg-gray-900 rounded-3xl border border-gray-800 shadow-lg overflow-hidden">
                     {/* Header */}
                     <div className="px-6 py-4 border-b border-gray-800 bg-gray-800/50">
                         <h2 className="text-xl font-bold text-white">
@@ -182,7 +182,7 @@ export default function AdminPage() {
 
                     {/* Error Message */}
                     {error && (
-                        <div className="m-6 p-4 bg-red-500/20 border border-red-500/30 rounded-lg">
+                        <div className="m-6 p-4 bg-red-500/20 border border-red-500/30 rounded-2xl">
                             <p className="text-sm text-red-400">{error}</p>
                         </div>
                     )}
@@ -210,7 +210,7 @@ export default function AdminPage() {
                                     placeholder="Search complaints..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                                    className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
                                 />
                             </div>
 
@@ -218,7 +218,7 @@ export default function AdminPage() {
                             <select
                                 value={statusFilter}
                                 onChange={(e) => setStatusFilter(e.target.value)}
-                                className="px-4 py-2 bg-gray-800 border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                                className="px-4 py-2 bg-gray-800 border border-gray-700 text-white rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
                             >
                                 <option value="">All Statuses</option>
                                 <option value="open">Open</option>
@@ -232,7 +232,7 @@ export default function AdminPage() {
                             <select
                                 value={priorityFilter}
                                 onChange={(e) => setPriorityFilter(e.target.value)}
-                                className="px-4 py-2 bg-gray-800 border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                                className="px-4 py-2 bg-gray-800 border border-gray-700 text-white rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
                             >
                                 <option value="">All Priorities</option>
                                 <option value="low">Low</option>
@@ -244,7 +244,7 @@ export default function AdminPage() {
                             {/* Reset Button */}
                             <button
                                 onClick={handleResetFilters}
-                                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg transition-colors font-medium border border-gray-600"
+                                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-xl transition-colors font-medium border border-gray-600"
                             >
                                 Reset Filters
                             </button>
@@ -353,7 +353,7 @@ export default function AdminPage() {
                                                         handleStatusChange(complaint._id, e.target.value)
                                                     }
                                                     disabled={updatingStatus === complaint._id}
-                                                    className={`text-sm rounded-lg border focus:ring-2 focus:ring-indigo-500 outline-none transition ${updatingStatus === complaint._id
+                                                    className={`text-sm rounded-xl border focus:ring-2 focus:ring-indigo-500 outline-none transition ${updatingStatus === complaint._id
                                                         ? 'opacity-50 cursor-not-allowed'
                                                         : 'cursor-pointer'
                                                         } ${getStatusColor(complaint.status)} font-medium px-3 py-1`}

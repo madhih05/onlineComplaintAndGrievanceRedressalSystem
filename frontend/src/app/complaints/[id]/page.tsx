@@ -26,6 +26,12 @@ export default function ComplaintDetailPage() {
     const [editAssignedTo, setEditAssignedTo] = useState('');
     const [editComment, setEditComment] = useState('');
 
+    // Feedback form state
+    const [rating, setRating] = useState(0);
+    const [hoverRating, setHoverRating] = useState(0);
+    const [feedbackComment, setFeedbackComment] = useState('');
+    const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
+
     useEffect(() => {
         const token = localStorage.getItem('token');
         const role = localStorage.getItem('role');
@@ -113,6 +119,36 @@ export default function ComplaintDetailPage() {
         }
     };
 
+    const handleFeedbackSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (rating === 0) {
+            setError('Please select a rating before submitting');
+            return;
+        }
+
+        setIsSubmittingFeedback(true);
+        setError('');
+
+        try {
+            await fetchAPI(`/complaints/${complaintId}/feedback`, {
+                method: 'POST',
+                body: { rating, comment: feedbackComment },
+            });
+
+            setSuccessMessage('Thank you for your feedback!');
+            setRating(0);
+            setFeedbackComment('');
+
+            // Re-fetch complaint to refresh and show read-only feedback view
+            await fetchComplaint();
+        } catch (err: any) {
+            setError(err.message || 'Failed to submit feedback');
+        } finally {
+            setIsSubmittingFeedback(false);
+        }
+    };
+
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-US', {
@@ -174,7 +210,7 @@ export default function ComplaintDetailPage() {
                     <p className="text-red-400 mb-4">{error}</p>
                     <button
                         onClick={handleBack}
-                        className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors"
+                        className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-colors"
                     >
                         Go Back
                     </button>
@@ -221,7 +257,7 @@ export default function ComplaintDetailPage() {
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Success Message */}
                 {successMessage && (
-                    <div className="mb-6 bg-green-500/20 border border-green-500/30 rounded-lg p-4 flex items-center justify-between">
+                    <div className="mb-6 bg-green-500/20 border border-green-500/30 rounded-2xl p-4 flex items-center justify-between">
                         <div className="flex items-center">
                             <svg
                                 className="w-5 h-5 text-green-400 mr-2"
@@ -253,7 +289,7 @@ export default function ComplaintDetailPage() {
 
                 {/* Error Message */}
                 {error && (
-                    <div className="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-lg">
+                    <div className="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-2xl">
                         <p className="text-sm text-red-400">{error}</p>
                     </div>
                 )}
@@ -262,7 +298,7 @@ export default function ComplaintDetailPage() {
                     {/* Main Content - 2/3 width */}
                     <div className="lg:col-span-2 space-y-6">
                         {/* Complaint Card */}
-                        <div className="bg-gray-900 rounded-xl border border-gray-800 shadow-lg p-6">
+                        <div className="bg-gray-900 rounded-3xl border border-gray-800 shadow-lg p-6">
                             <div className="flex justify-between items-start mb-4">
                                 <h2 className="text-2xl font-bold text-white">
                                     {isEditMode ? 'Edit Complaint' : 'Complaint Details'}
@@ -270,7 +306,7 @@ export default function ComplaintDetailPage() {
                                 {!isEditMode && (
                                     <button
                                         onClick={() => setIsEditMode(true)}
-                                        className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors font-medium"
+                                        className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-colors font-medium"
                                     >
                                         Edit Ticket
                                     </button>
@@ -334,7 +370,7 @@ export default function ComplaintDetailPage() {
                                             <img
                                                 src={complaint.imageUrl}
                                                 alt="Complaint"
-                                                className="max-w-full h-auto rounded-lg shadow-md"
+                                                className="max-w-full h-auto rounded-2xl shadow-md"
                                             />
                                         </div>
                                     )}
@@ -385,7 +421,7 @@ export default function ComplaintDetailPage() {
                                                     required
                                                     value={editTitle}
                                                     onChange={(e) => setEditTitle(e.target.value)}
-                                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+                                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
                                                 />
                                             </div>
 
@@ -398,7 +434,7 @@ export default function ComplaintDetailPage() {
                                                     value={editDescription}
                                                     onChange={(e) => setEditDescription(e.target.value)}
                                                     rows={6}
-                                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none resize-none"
+                                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none resize-none"
                                                 />
                                             </div>
                                         </>
@@ -412,7 +448,7 @@ export default function ComplaintDetailPage() {
                                         <select
                                             value={editStatus}
                                             onChange={(e) => setEditStatus(e.target.value)}
-                                            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+                                            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
                                         >
                                             {userRole === 'user' ? (
                                                 <>
@@ -441,7 +477,7 @@ export default function ComplaintDetailPage() {
                                             <select
                                                 value={editPriority}
                                                 onChange={(e) => setEditPriority(e.target.value)}
-                                                className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+                                                className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
                                             >
                                                 <option value="low">Low</option>
                                                 <option value="medium">Medium</option>
@@ -461,7 +497,7 @@ export default function ComplaintDetailPage() {
                                                 type="email"
                                                 value={editAssignedTo}
                                                 onChange={(e) => setEditAssignedTo(e.target.value)}
-                                                className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+                                                className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
                                                 placeholder="staff@example.com"
                                             />
                                         </div>
@@ -476,7 +512,7 @@ export default function ComplaintDetailPage() {
                                             value={editComment}
                                             onChange={(e) => setEditComment(e.target.value)}
                                             rows={3}
-                                            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none resize-none"
+                                            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none resize-none"
                                             placeholder="Add a note to the timeline..."
                                         />
                                     </div>
@@ -486,7 +522,7 @@ export default function ComplaintDetailPage() {
                                         <button
                                             type="submit"
                                             disabled={saving}
-                                            className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-xl font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
                                             {saving ? 'Saving...' : 'Save Changes'}
                                         </button>
@@ -497,7 +533,7 @@ export default function ComplaintDetailPage() {
                                                 setEditComment('');
                                                 setError('');
                                             }}
-                                            className="px-6 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-lg font-medium border border-gray-700 transition-colors"
+                                            className="px-6 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl font-medium border border-gray-700 transition-colors"
                                         >
                                             Cancel
                                         </button>
@@ -507,9 +543,10 @@ export default function ComplaintDetailPage() {
                         </div>
                     </div>
 
-                    {/* Timeline - 1/3 width */}
-                    <div className="lg:col-span-1">
-                        <div className="bg-gray-900 rounded-xl border border-gray-800 shadow-lg p-6 sticky top-8">
+                    {/* Timeline & Feedback - Right Column */}
+                    <div className="lg:col-span-1 space-y-6">
+                        {/* Timeline Card */}
+                        <div className="bg-gray-900 rounded-3xl border border-gray-800 shadow-lg p-6 sticky top-8">
                             <h3 className="text-lg font-bold text-white mb-4">
                                 Timeline
                             </h3>
@@ -552,6 +589,107 @@ export default function ComplaintDetailPage() {
                                 <p className="text-sm text-gray-500">No timeline entries yet</p>
                             )}
                         </div>
+
+                        {/* Feedback Card */}
+                        {complaint.feedback && complaint.feedback.rating ? (
+                            /* Read-Only Feedback View */
+                            <div className="bg-gray-900 rounded-3xl p-6 mt-6 border border-gray-800 shadow-lg">
+                                <h3 className="text-lg font-bold text-white mb-4">
+                                    Your Feedback
+                                </h3>
+
+                                {/* Star Rating Display */}
+                                <div className="flex items-center gap-1 mb-4">
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                        <svg
+                                            key={star}
+                                            className={`w-6 h-6 ${star <= complaint.feedback!.rating
+                                                ? 'text-yellow-400'
+                                                : 'text-gray-700'
+                                                }`}
+                                            fill="currentColor"
+                                            viewBox="0 0 20 20"
+                                        >
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                    ))}
+                                </div>
+
+                                {/* Comment Display */}
+                                {complaint.feedback.comment && (
+                                    <p className="text-gray-300 text-sm mb-4">
+                                        {complaint.feedback.comment}
+                                    </p>
+                                )}
+
+                                {/* Date */}
+                                <p className="text-xs text-gray-500">
+                                    Submitted on {formatDate(complaint.feedback.createdAt)}
+                                </p>
+                            </div>
+                        ) : userRole === 'user' &&
+                            (complaint.status === 'resolved' || complaint.status === 'closed') ? (
+                            /* Interactive Feedback Form */
+                            <form
+                                onSubmit={handleFeedbackSubmit}
+                                className="bg-gray-900 rounded-3xl p-6 mt-6 border border-gray-800 shadow-lg"
+                            >
+                                <h3 className="text-lg font-bold text-white mb-4">
+                                    Share Your Feedback
+                                </h3>
+
+                                {/* Star Rating Input */}
+                                <div className="flex items-center gap-2 mb-4">
+                                    <span className="text-sm text-gray-400 mr-2">Rate this resolution:</span>
+                                    <div className="flex gap-1">
+                                        {[1, 2, 3, 4, 5].map((star) => (
+                                            <button
+                                                key={star}
+                                                type="button"
+                                                onMouseEnter={() => setHoverRating(star)}
+                                                onMouseLeave={() => setHoverRating(0)}
+                                                onClick={() => setRating(star)}
+                                                className="transition-transform hover:scale-110"
+                                            >
+                                                <svg
+                                                    className={`w-7 h-7 cursor-pointer transition-colors ${star <= (hoverRating || rating)
+                                                        ? 'text-yellow-400'
+                                                        : 'text-gray-700'
+                                                        }`}
+                                                    fill="currentColor"
+                                                    viewBox="0 0 20 20"
+                                                >
+                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                </svg>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Error when no rating selected */}
+                                {error && error.includes('rating') && (
+                                    <p className="text-sm text-red-400 mb-3">{error}</p>
+                                )}
+
+                                {/* Comment Textarea */}
+                                <textarea
+                                    value={feedbackComment}
+                                    onChange={(e) => setFeedbackComment(e.target.value)}
+                                    placeholder="Share any comments about how your complaint was resolved (optional)"
+                                    rows={4}
+                                    className="w-full bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-2xl p-4 mt-4 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition resize-none"
+                                />
+
+                                {/* Submit Button */}
+                                <button
+                                    type="submit"
+                                    disabled={isSubmittingFeedback}
+                                    className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-3 px-4 w-full mt-4 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {isSubmittingFeedback ? 'Submitting...' : 'Submit Feedback'}
+                                </button>
+                            </form>
+                        ) : null}
                     </div>
                 </div>
             </div>

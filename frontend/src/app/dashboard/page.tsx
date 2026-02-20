@@ -132,7 +132,7 @@ export default function DashboardPage() {
                         </h1>
                         <button
                             onClick={handleLogout}
-                            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors font-medium"
+                            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl transition-colors font-medium"
                         >
                             Logout
                         </button>
@@ -144,7 +144,7 @@ export default function DashboardPage() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Success Alert */}
                 {successMessage && (
-                    <div className="mb-6 bg-green-500/20 border border-green-500/30 rounded-lg p-4 flex items-start justify-between">
+                    <div className="mb-6 bg-green-500/20 border border-green-500/30 rounded-2xl p-4 flex items-start justify-between">
                         <div className="flex-1">
                             <div className="flex items-center">
                                 <svg
@@ -194,13 +194,13 @@ export default function DashboardPage() {
                 {/* Two Column Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     {/* Left Column - Submit Form */}
-                    <div className="bg-gray-900 rounded-xl border border-gray-800 shadow-lg p-6">
+                    <div className="bg-gray-900 rounded-3xl border border-gray-800 shadow-lg p-6">
                         <h2 className="text-2xl font-bold text-white mb-6">
                             Submit New Complaint
                         </h2>
 
                         {error && (
-                            <div className="mb-4 p-3 bg-red-500/20 border border-red-500/30 rounded-lg">
+                            <div className="mb-4 p-3 bg-red-500/20 border border-red-500/30 rounded-2xl">
                                 <p className="text-sm text-red-400">{error}</p>
                             </div>
                         )}
@@ -215,7 +215,7 @@ export default function DashboardPage() {
                                     required
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
-                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
+                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
                                     placeholder="Brief summary of your complaint"
                                 />
                             </div>
@@ -229,7 +229,7 @@ export default function DashboardPage() {
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                     rows={6}
-                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition resize-none"
+                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition resize-none"
                                     placeholder="Provide detailed information about your complaint..."
                                 />
                             </div>
@@ -245,14 +245,14 @@ export default function DashboardPage() {
                                     onChange={(e) =>
                                         setImage(e.target.files ? e.target.files[0] : null)
                                     }
-                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-indigo-600 file:text-indigo-50 hover:file:bg-indigo-700"
+                                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-indigo-600 file:text-indigo-50 hover:file:bg-indigo-700"
                                 />
                             </div>
 
                             <button
                                 type="submit"
                                 disabled={submitting}
-                                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/30"
+                                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/30"
                             >
                                 {submitting ? 'Submitting...' : 'Submit Complaint'}
                             </button>
@@ -260,7 +260,7 @@ export default function DashboardPage() {
                     </div>
 
                     {/* Right Column - My Complaints */}
-                    <div className="bg-gray-900 rounded-xl border border-gray-800 shadow-lg p-6">
+                    <div className="bg-gray-900 rounded-3xl border border-gray-800 shadow-lg p-6">
                         <h2 className="text-2xl font-bold text-white mb-6">
                             My Complaints
                         </h2>
@@ -294,7 +294,7 @@ export default function DashboardPage() {
                                 {complaints.map((complaint) => (
                                     <div
                                         key={complaint._id}
-                                        className="border border-gray-800 bg-gray-800/30 rounded-lg p-4 hover:bg-gray-800/50 transition-colors cursor-pointer"
+                                        className="border border-gray-800 bg-gray-800/30 rounded-2xl p-4 hover:bg-gray-800/50 transition-colors cursor-pointer"
                                         onClick={() => router.push(`/complaints/${complaint._id}`)}
                                     >
                                         <div className="flex justify-between items-start mb-2">
