@@ -121,8 +121,8 @@ export default function LoginPage() {
                                 setError('');
                             }}
                             className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${isLogin
-                                    ? 'bg-indigo-600 text-white shadow-md'
-                                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-700'
+                                ? 'bg-indigo-600 text-white shadow-md'
+                                : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-700'
                                 }`}
                         >
                             Login
@@ -133,8 +133,8 @@ export default function LoginPage() {
                                 setError('');
                             }}
                             className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${!isLogin
-                                    ? 'bg-indigo-600 text-white shadow-md'
-                                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-700'
+                                ? 'bg-indigo-600 text-white shadow-md'
+                                : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-700'
                                 }`}
                         >
                             Register
