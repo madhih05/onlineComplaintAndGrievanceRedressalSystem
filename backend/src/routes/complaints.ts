@@ -4,6 +4,7 @@ import Complaint from "../models/complaints.js";
 import logger from "../utils/logger.js";
 import { analyzePriorityWithAI } from "../helper/ai.js";
 import { verifyToken, authorizeRoles, AuthRequest } from "../middleware/auth.middleware.js";
+import User from "../models/users.js";
 
 const router = Router();
 
@@ -77,8 +78,9 @@ router.get('/', verifyToken, async (req: AuthRequest, res: Response) => {
         let complaints;
         if (role === 'admin') {
             complaints = await Complaint.find(filter)
-                .select('title description status priority createdAt')
-                .populate('createdBy', 'username');
+                .select('title description status priority createdAt assignedTo')
+                .populate('createdBy', 'username')
+                .populate('assignedTo', 'username');
         }
         else if (role === 'supportStaff') {
             const assignedTo = userId;
@@ -152,8 +154,18 @@ router.put('/:id', verifyToken, async (req: AuthRequest, res: Response) => {
         if (role === 'admin') {
             isAuthorized = true;
 
-            if (assignedTo && complaint.assignedTo?.toString() !== assignedTo) {
-                complaint.assignedTo = assignedTo;
+            let assignedStaff = null;
+
+            if (assignedTo) {
+                assignedStaff = await User.findOne({ email: assignedTo });
+            }
+
+            if (!assignedStaff || assignedStaff.role !== 'supportStaff') {
+                return res.status(400).json({ message: "Invalid assignedTo: No support staff found with that email" });
+            }
+
+            if (assignedStaff && complaint.assignedTo?.toString() !== assignedStaff._id.toString()) {
+                complaint.assignedTo = assignedStaff._id;
                 timelineComment = timelineComment || 'Complaint reassigned';
             }
 
