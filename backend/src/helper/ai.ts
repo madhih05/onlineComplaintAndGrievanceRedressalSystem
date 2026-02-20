@@ -8,7 +8,7 @@ export const analyzePriorityWithAI = async (
     description: string
 ): Promise<"low" | "medium" | "high" | "critical"> => {
     try {
-        const model = genAI.getGenerativeModel({ model: 'gemini-3-flash-preview' });
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
         const prompt = `Analyze the following customer complaint and rate its urgency/priority.
         You must respond with EXACTLY ONE WORD from this list: low, medium, high, critical.
         Do not include any other text, punctuation, formatting, or explanation.
