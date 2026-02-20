@@ -111,7 +111,6 @@ router.get("/:id", verifyToken, async (req: AuthRequest, res: Response) => {
         const role = req.role as string;
 
         const complaint = await Complaint.findById(complaintId)
-            .select('createdBy assignedTo title description createdAt priority status imageUrl')
             .populate('createdBy', 'username')
             .populate('assignedTo', 'username');
 
@@ -119,15 +118,31 @@ router.get("/:id", verifyToken, async (req: AuthRequest, res: Response) => {
             return res.status(404).json({ message: 'Complaint not found' });
         }
 
+        const creatorId = (complaint.createdBy as any)._id
+            ? (complaint.createdBy as any)._id.toString()
+            : complaint.createdBy.toString();
+
+        const assigneeId = complaint.assignedTo
+            ? ((complaint.assignedTo as any)._id
+                ? (complaint.assignedTo as any)._id.toString()
+                : complaint.assignedTo.toString())
+            : null;
+
+        let assigneeEmail: any = null;
+        if (assigneeId) {
+            const assignee = await User.findById(assigneeId).select('email');
+            assigneeEmail = assignee ? assignee.email : null;
+        }
+
         if (
-            complaint.createdBy.toString() !== userId
-            && complaint.assignedTo?.toString() !== userId
+            creatorId !== userId
+            && assigneeId !== userId
             && role !== 'admin'
         ) {
             return res.status(403).json({ message: "Forbidden: You don't have permission to access this resource" });
         }
 
-        res.status(200).json({ complaint });
+        res.status(200).json({ complaint, assigneeEmail });
     }
     catch (error) {
         logger.error('Error fetching complaint details:', error);

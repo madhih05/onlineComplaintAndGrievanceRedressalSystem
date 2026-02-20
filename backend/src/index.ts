@@ -1,7 +1,7 @@
 import "dotenv/config";
 import mongoose from "mongoose";
 import express from "express";
-
+import cors from "cors";
 import authRoutes from "./routes/auth.routes.js";
 import complaintRoutes from "./routes/complaints.js";
 import logger from "./utils/logger.js";
@@ -10,6 +10,7 @@ import { requestLogger } from "./middleware/request-logger.middleware.js";
 const mongodbUri = process.env.MONGODB_URI as string;
 
 const app = express();
+app.use(cors());
 
 app.use(express.json());
 app.use(requestLogger);
